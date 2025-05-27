@@ -1,0 +1,232 @@
+/* CSS Variables */
+:root {
+    --primary-color: #007bff;
+    --primary-color-darker: #0056b3;
+    --secondary-color: #28a745;
+    --secondary-color-darker: #218838;
+    --text-color: #333333;
+    --text-color-light: #ffffff;
+    --background-color: #f8f9fa;
+    --surface-color: #ffffff;
+    --border-color: #e7e7e7;
+    --font-family-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --header-height: 60px; /* Approximate height of the navbar */
+    --border-radius-standard: 8px;
+    --box-shadow-soft: 0 2px 4px rgba(0,0,0,0.05);
+    --box-shadow-medium: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-sans-serif);
+    line-height: 1.8;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+header {
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow-soft);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    height: var(--header-height); /* Set explicit height */
+    display: flex; /* To help center nav-container vertically */
+    align-items: center; /* To help center nav-container vertically */
+}
+
+/* Navigation Bar Styles */
+#navbar {
+    width: 100%; /* Ensure navbar takes full width of header */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem; /* Vertical padding handled by header height */
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+}
+
+.nav-item {
+    margin-left: 20px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.nav-item a:hover,
+.nav-item a.active {
+    color: var(--primary-color);
+}
+
+/* Hamburger Menu Styles */
+.nav-toggler {
+    display: none;
+    cursor: pointer;
+}
+
+.nav-toggler span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-color);
+    margin: 5px 0;
+    transition: 0.4s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: var(--header-height); /* Use variable for top position */
+        left: 0;
+        background-color: var(--surface-color);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem 0;
+        box-shadow: var(--box-shadow-medium);
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .nav-item {
+        margin: 0;
+        text-align: center;
+    }
+
+    .nav-item a {
+        display: block;
+        padding: 1rem;
+        border-bottom: 1px solid var(--background-color); /* Use a lighter border */
+    }
+
+    .nav-item:last-child a {
+        border-bottom: none;
+    }
+
+    .nav-toggler {
+        display: block;
+    }
+
+    .nav-toggler.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .nav-toggler.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .nav-toggler.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+}
+
+#hero {
+    background: linear-gradient(to right, #0062E6, #33AEFF); /* Keeping gradient for now, can be variablized if needed */
+    color: var(--text-color-light);
+    padding: calc(var(--header-height) + 3rem) 2rem 3rem 2rem; /* Adjusted top padding */
+    text-align: center;
+}
+
+#hero h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+#hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cta-button {
+    background: var(--secondary-color);
+    color: var(--text-color-light);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--border-radius-standard);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+#cta-button:hover {
+    background: var(--secondary-color-darker);
+    transform: translateY(-2px);
+}
+
+#cta-button:active {
+    transform: translateY(-1px);
+}
+
+section {
+    padding: 3rem 2rem; /* Default section padding */
+    text-align: center;
+}
+
+section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+#features, #testimonials { /* #pricing has a different background */
+    background: var(--surface-color);
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+#features {
+    border-bottom: 1px solid var(--border-color);
+}
+
+#pricing {
+     background-color: var(--background-color); /* Alternate background */
+     border-bottom: 1px solid var(--border-color);
+     padding-top: 4rem;
+     padding-bottom: 4rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    background: #343a40; /* Keeping dark footer, can be variablized */
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+}
