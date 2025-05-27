@@ -1,31 +1,71 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const axios = require('axios'); // Added axios
 
 const prisma = new PrismaClient();
+const BANKID_API_BASE_URL = process.env.BANKID_API_BASE_URL || 'https://appapi2.test.bankid.com/rp/v6.0';
 
 // Function to generate JWT token
 const generateToken = (id) => {
   const jwtSecret = process.env.JWT_SECRET || 'DEFAULT_JWT_SECRET';
-  // Note: Using 'DEFAULT_JWT_SECRET' if process.env.JWT_SECRET is not set. 
-  // This should be configured properly in a production environment.
   return jwt.sign({ id }, jwtSecret, {
-    expiresIn: '30d', // Token expires in 30 days
+    expiresIn: '30d',
   });
 };
 
-// Initiate BankID Signup (mocked response)
+// Initiate BankID Authentication
 const initiateBankIdSignup = async (req, res) => {
+  // For now, using a placeholder for req.ip. In a real setup, ensure Express correctly parses req.ip.
+  // Example: app.set('trust proxy', 1) if behind a reverse proxy.
+  const endUserIp = req.ip || "127.0.0.1"; 
+  // Placeholder for returnUrl, should be configurable or match your frontend callback.
+  const returnUrl = process.env.BANKID_RETURN_URL || "https://your-frontend.example.com/bankid-callback";
+
+  const payload = {
+    endUserIp,
+    returnUrl,
+    // Additional parameters like 'requirement' can be added here if needed
+    // e.g., requirement: { type: "CERTIFICATE_POLICIES", certificatePolicies: ["1.2.752.78.1.5"] } // Mobile BankID
+  };
+
+  console.log('Initiating BankID auth with payload:', JSON.stringify(payload, null, 2));
+
   try {
-    // In a real scenario, this would involve interaction with the BankID service.
-    // For this task, we return a mocked response.
-    res.status(200).json({
-      name: "Test Testsson",
-      socialSecurityNumber: "19900101-1234"
+    const bankIdResponse = await axios.post(`${BANKID_API_BASE_URL}/auth`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // BankID test API might require specific TLS configuration for HTTPS client certificates
+      // For the test API without client certs, this should be fine.
+      // If using CA certificates for the BankID server:
+      // httpsAgent: new https.Agent({ ca: fs.readFileSync('path/to/bankid_root_ca.pem') })
     });
+
+    console.log('BankID API response status:', bankIdResponse.status);
+    console.log('BankID API response data:', bankIdResponse.data);
+
+    // Forward the success response from BankID to the client
+    res.status(bankIdResponse.status).json(bankIdResponse.data);
+
   } catch (error) {
-    console.error('Error in initiateBankIdSignup:', error);
-    res.status(500).json({ message: 'Server error during BankID initiation' });
+    console.error('Error during BankID auth initiation:');
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error('BankID API Error Status:', error.response.status);
+      console.error('BankID API Error Data:', error.response.data);
+      // Forward BankID's error response to the client
+      res.status(error.response.status).json(error.response.data);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('BankID API No Response:', error.request);
+      res.status(500).json({ message: 'No response from BankID service.' });
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('BankID API Request Setup Error:', error.message);
+      res.status(500).json({ message: 'Server error setting up BankID request.' });
+    }
   }
 };
 
