@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String   // Stores the hashed password
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id          Int      @id @default(autoincrement())
+  number      String   @unique // Chart of accounts number
+  name        String
+  type        String   // e.g., ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  LedgerEntry LedgerEntry[]
+}
+
+model LedgerEntry {
+  id          Int      @id @default(autoincrement())
+  date        DateTime // Date of the transaction
+  description String
+  amount      Float    // Amount of the transaction
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  accountId   Int
+  account     Account  @relation(fields: [accountId], references: [id])
+}
