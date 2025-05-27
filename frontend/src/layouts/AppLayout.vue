@@ -15,6 +15,12 @@
             >
               General Ledger
             </router-link>
+            <router-link
+              to="/companies"
+              class="ml-3 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white"
+            >
+              My Companies
+            </router-link>
             <button
               @click="handleLogout"
               class="ml-3 px-3 py-2 rounded-md text-sm font-medium bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white"
