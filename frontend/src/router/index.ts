@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
-// Import GeneralLedger.vue instead of Dashboard.vue
-import GeneralLedger from '../views/GeneralLedger.vue'; 
+// GeneralLedger is now lazy-loaded
 import BankIDSignup from '../views/BankIDSignup.vue'; // Import BankIDSignup component
 import CompaniesView from '../views/CompaniesView.vue'; // Import CompaniesView component
 import EnrollCompany from '../views/EnrollCompany.vue'; // Import EnrollCompany component
@@ -22,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dashboard', // This path remains the main authenticated view
     name: 'GeneralLedger', // Changed name for clarity
-    component: GeneralLedger, // Use GeneralLedger component
+    component: () => import('@/modules/ledger/views/GeneralLedgerView.vue'), // Lazy load from new path
     meta: { requiresAuth: true },
   },
   {
@@ -41,6 +40,19 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: '/dashboard', // Redirect root to the main authenticated view
+  },
+  // Aktiehantering Module Routes
+  {
+    path: '/aktiehantering',
+    name: 'AktiehanteringDashboard',
+    component: () => import('@/modules/aktiehantering/views/AktiehanteringDashboardView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/aktiehantering/shareholders',
+    name: 'ShareholderList',
+    component: () => import('@/modules/aktiehantering/views/ShareholderListView.vue'),
+    meta: { requiresAuth: true }
   },
   // Optional: Add a 404 route
   // { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('../views/NotFound.vue') }

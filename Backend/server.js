@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path'); // Import path module
 const cors = require('cors'); // Often needed for frontend-backend interaction
 const morgan = require('morgan'); // For logging HTTP requests
 
@@ -15,6 +16,9 @@ app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(morgan('dev')); // Use morgan for request logging in development
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
+
+// Serve static files from the frontend build directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -33,7 +37,11 @@ const PORT = process.env.PORT || 5000;
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log('Hi')
+});
+
+// Catch-all GET route to serve index.html for client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 // Handle unhandled promise rejections
