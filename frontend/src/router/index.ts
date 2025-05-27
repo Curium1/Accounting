@@ -2,6 +2,9 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Login from '../views/Login.vue';
 // Import GeneralLedger.vue instead of Dashboard.vue
 import GeneralLedger from '../views/GeneralLedger.vue'; 
+import BankIDSignup from '../views/BankIDSignup.vue'; // Import BankIDSignup component
+import CompaniesView from '../views/CompaniesView.vue'; // Import CompaniesView component
+import EnrollCompany from '../views/EnrollCompany.vue'; // Import EnrollCompany component
 import { useAuthStore } from '../stores/auth';
 
 const routes: Array<RouteRecordRaw> = [
@@ -11,9 +14,28 @@ const routes: Array<RouteRecordRaw> = [
     component: Login,
   },
   {
+    path: '/signup-bankid',
+    name: 'BankIDSignup',
+    component: BankIDSignup,
+    meta: { requiresAuth: false }, // Signup is for unauthenticated users
+  },
+  {
     path: '/dashboard', // This path remains the main authenticated view
     name: 'GeneralLedger', // Changed name for clarity
     component: GeneralLedger, // Use GeneralLedger component
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/companies',
+    name: 'CompaniesView',
+    component: CompaniesView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/enroll-company/:orgNumber',
+    name: 'EnrollCompany',
+    component: EnrollCompany,
+    props: true, // Pass route params as props
     meta: { requiresAuth: true },
   },
   {

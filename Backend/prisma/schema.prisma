@@ -11,11 +11,13 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String   // Stores the hashed password
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                   Int       @id @default(autoincrement())
+  name                 String?
+  socialSecurityNumber String    @unique
+  email                String    @unique
+  password             String?   // Stores the hashed password
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 }
 
 model Account {

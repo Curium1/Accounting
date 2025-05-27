@@ -43,6 +43,10 @@
           </div>
         </div>
       </form>
+      <p class="mt-6 text-sm text-center text-gray-600">
+        New user? 
+        <router-link to="/signup-bankid" class="font-medium text-blue-600 hover:underline">Sign up with BankID</router-link>
+      </p>
     </div>
   </div>
 </template>
